@@ -5,6 +5,8 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class ApiTest extends BaseTest {
 
 
@@ -28,12 +30,20 @@ public class ApiTest extends BaseTest {
     }
 
     @Test
-    public void checkId() {
+    public void checkContainsId() {
         Response response = requestSpecification
                 .basePath("/v2/user/user1")
                 .get();
-        response.getBody().as(User.class);
+        User body = response.getBody().as(User.class);
+        assertEquals("9013685127327281000", String.valueOf(body.getId()));
+    }
 
-
+    @Test
+    public void checkStatusCodeLogin() {
+        Response response = requestSpecification
+                .basePath("/v2/user/login")
+                .get();
+        int actualResult = response.getStatusCode();
+        assertEquals(200, actualResult);
     }
 }
